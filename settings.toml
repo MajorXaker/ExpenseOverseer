@@ -1,0 +1,15 @@
+[default]
+    APPNAME = "Expense Overseer"
+    VERSION = "0.0.1"
+
+    DATABASE_PORT = "5432"
+    DATABASE_USER = "postgres"
+    DATABASE_PASSWORD = "postgres"
+    DATABASE_DB = "expense_overseer"
+    DATABASE_HOST = "localhost"
+    DATABASE_ECHO_MODE = false
+
+
+[test]
+    DATABASE_DB = "test-db"
+    DATABASE_HOST = "postgres"
