@@ -1,6 +1,6 @@
 [default]
     APPNAME = "Expense Overseer"
-    VERSION = "0.0.1"
+    VERSION = "0.0.2"
 
     DATABASE_PORT = "5432"
     DATABASE_USER = "postgres"

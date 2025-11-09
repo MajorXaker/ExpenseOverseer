@@ -15,10 +15,10 @@ dependencies = [
 	"alembic",
 	"psycopg2-binary",
 	"aiogram",
-#	"pillow",
-#	"plotly",
-#	"pandas",
-#	"kaleido",
+	#	"pillow",
+	#	"plotly",
+	#	"pandas",
+	#	"kaleido",
 ]
 
 

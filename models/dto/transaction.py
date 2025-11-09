@@ -18,5 +18,5 @@ class Transaction(BaseModel):
     @property
     def human_readable(self) -> str:
         return (
-            "expense " if TransactionType.EXPENSE else "income "
+            "expense " if self.transaction_type == TransactionType.EXPENSE else "income "
         ) + f"{self.amount} {self.currency}, description: \"{self.description}\""
