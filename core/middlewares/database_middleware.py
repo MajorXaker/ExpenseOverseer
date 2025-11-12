@@ -1,4 +1,4 @@
-from typing import Callable, Any, Awaitable
+from typing import Any, Awaitable, Callable
 
 from aiogram.types import Message
 
@@ -12,12 +12,11 @@ class DatabaseMiddleware:
     """
 
     async def __call__(
-            self,
-            handler: Callable[[Message, dict[str, Any]], Awaitable[Any]],
-            event: Message,
-            data: dict[str, Any],
+        self,
+        handler: Callable[[Message, dict[str, Any]], Awaitable[Any]],
+        event: Message,
+        data: dict[str, Any],
     ) -> Any:
         async with get_session() as db_session:
             data["session"] = db_session
             return await handler(event, data)
-

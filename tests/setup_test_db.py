@@ -3,10 +3,11 @@ import asyncio
 
 import asyncpg
 import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import create_async_engine
+
+from models import db_models as m
 from utils.config import settings as s
 from utils.db import db_url
-from models import db_models as m
-from sqlalchemy.ext.asyncio import create_async_engine
 
 psql_url = (
     f"postgresql://{s.DATABASE_USER}:{s.DATABASE_PASSWORD}@{s.DATABASE_HOST}:5432"

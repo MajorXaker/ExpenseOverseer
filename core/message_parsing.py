@@ -12,7 +12,7 @@ def parse_message(message_text: str) -> ParsedMessage:
 
     raw_amount, description = message_text.split(" ", 1)
 
-    parsed_amount = re.findall(r'[+-]?[\d.]+', raw_amount)
+    parsed_amount = re.findall(r"[+-]?[\d.]+", raw_amount)
 
     if not parsed_amount:
         raise InvalidAmountException(raw_amount)

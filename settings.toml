@@ -1,6 +1,6 @@
 [default]
     APPNAME = "Expense Overseer"
-    VERSION = "0.0.2"
+    VERSION = "0.1.1"
 
     DATABASE_PORT = "5432"
     DATABASE_USER = "postgres"
@@ -9,6 +9,7 @@
     DATABASE_HOST = "localhost"
     DATABASE_ECHO_MODE = false
 
+    TG_BOT_TOKEN = ""
 
 [test]
     DATABASE_DB = "test-db"

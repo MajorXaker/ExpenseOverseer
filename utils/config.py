@@ -17,4 +17,3 @@ settings = Dynaconf(
 )
 
 log = logging.getLogger(__name__)
-

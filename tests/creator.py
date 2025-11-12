@@ -1,10 +1,10 @@
 import random
 
-
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import models.db_models as m
+
 
 class Creator:
     user_counter = 0
@@ -38,5 +38,3 @@ class Creator:
         )
 
         return user_id
-
-

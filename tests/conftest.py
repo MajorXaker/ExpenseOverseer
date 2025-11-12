@@ -2,11 +2,11 @@ import asyncio
 
 import pytest
 from sqlalchemy.engine import Engine
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
-from utils.config import settings as st
 from models import db_models as m
+from utils.config import settings as st
+
 from .creator import Creator
 
 db_url = (
