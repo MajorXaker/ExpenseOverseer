@@ -76,10 +76,3 @@ else
     print_error "Docker build failed"
     exit 1
 fi
-
-## Optional: Display image info
-#print_status "Image information:"
-#docker images "${REGISTRY_PREFIX}${IMAGE_NAME}" --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}\t{{.CreatedAt}}"
-#
-#print_success "Build process completed successfully!"
-
