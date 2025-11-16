@@ -19,11 +19,13 @@ class Transaction(BaseModel):
 
     @property
     def human_readable(self) -> str:
-        return (
+        text = (
             "expense "
             if self.transaction_type == TransactionType.EXPENSE
             else "income "
-        ) + f'{self.amount} {self.currency}, description: "{self.description}"'
+        )
+        text += f'{self.amount} {self.currency} "{self.description}"'
+        return text
 
     @staticmethod
     def model_from_transaction_type(

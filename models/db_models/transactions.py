@@ -16,6 +16,10 @@ class AbstractTransaction(RecordTimestampFields):
         default=CurrencyEnum.BYN,
         server_default=CurrencyEnum.BYN,
     )
+    transaction_date = sa.Column(
+        sa.DateTime,
+        nullable=False,
+    )
 
     description = sa.Column(sa.Text, nullable=False)
     category_id = sa.Column(

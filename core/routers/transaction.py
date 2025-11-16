@@ -6,20 +6,28 @@ from aiogram.types import CallbackQuery, Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.keyboards.category import get_category_keyboard
+from core.keyboards.main_menu import get_main_menu_keyboard
 from core.message_parsing import parse_message
-from core.transactions import record_transaction, set_transaction_category
+from core.transactions import (
+    get_last_transactions,
+    record_transaction,
+    set_transaction_category,
+)
 from models.dto.transaction import Transaction
 from models.dto.user_data import UserData
 from models.enums.currency import CurrencyEnum
 from models.enums.transaction_type import TransactionType
 from utils.exceptions import InvalidAmountException
 
-text_router = Router()
+transaction_router = Router()
 
 
-@text_router.message(F.text.regexp(r"^([0-9.+-]+)\s+(.+)$"))
+@transaction_router.message(F.text.regexp(r"^([0-9.+-]+)\s+(.+)$"))
 async def handle_numbered_message(
-    message: Message, session: AsyncSession, user_data: UserData, state: FSMContext
+    message: Message,
+    session: AsyncSession,
+    user_data: UserData,
+    state: FSMContext,
 ):
     try:
         parsed_message = parse_message(message.text)
@@ -52,7 +60,7 @@ async def handle_numbered_message(
 
 
 # Handle category selection
-@text_router.callback_query(F.data.startswith("cat_"))
+@transaction_router.callback_query(F.data.startswith("cat_"))
 async def process_category(
     callback: CallbackQuery,
     state: FSMContext,
@@ -82,6 +90,25 @@ async def process_category(
     await callback.answer()
 
 
-@text_router.message()
-async def unknown_handler(message: Message) -> None:
-    await message.answer("Wrong command")
+@transaction_router.message(F.text == "📊 Transactions")
+async def show_transactions(
+    message: Message,
+    session: AsyncSession,
+    user_data: UserData,
+    state: FSMContext,
+):
+    transactions = await get_last_transactions(session, user_data.user_id, limit=5)
+
+    if not transactions:
+        await message.answer(
+            "No transactions yet.", reply_markup=get_main_menu_keyboard()
+        )
+        return
+
+    # Format transactions
+    text = "**Your Last 5 Transactions**\n\n"
+    for idx, tx in enumerate(transactions, 1):
+        date_text = tx.date.strftime("%Y.%m.%d")
+        text += f"{idx}. ({date_text}): {tx.human_readable}\n"
+
+    await message.answer(text, reply_markup=get_main_menu_keyboard())

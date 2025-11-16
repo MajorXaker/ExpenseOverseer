@@ -1,13 +1,12 @@
-import asyncio
+from typing import Any, AsyncGenerator
 
-import pytest
-from sqlalchemy.engine import Engine
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+import pytest_asyncio
+from sqlalchemy import Engine
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 
 from models import db_models as m
+from tests.creator import Creator
 from utils.config import settings as st
-
-from .creator import Creator
 
 db_url = (
     "postgresql+asyncpg://"
@@ -19,13 +18,6 @@ db_url = (
 )
 
 
-@pytest.fixture(scope="session")
-def event_loop():
-    loop = asyncio.get_event_loop()
-    yield loop
-    loop.close()
-
-
 def check_test_db():
     if (
         st.DATABASE_HOST not in ("localhost", "127.0.0.1", "postgres")
@@ -35,15 +27,12 @@ def check_test_db():
         raise Exception("Use local database only!")
 
 
-async def drop_everything(engine: Engine):
+async def drop_everything(engine: Engine | AsyncEngine):
     # db may resist dropping all due to internal relations to each other
     # so we first locate all foreign keys and tables
     # then we drop all constraints first
     # and then all tables
-    from sqlalchemy.schema import (
-        DropConstraint,
-        DropTable,
-    )
+    from sqlalchemy.schema import DropConstraint, DropTable
 
     tables = []
     all_fkeys = []
@@ -63,12 +52,11 @@ async def drop_everything(engine: Engine):
             con.execute(DropTable(table))
 
 
-@pytest.fixture(scope="session")
+@pytest_asyncio.fixture(scope="function")
 async def engine():
     check_test_db()
-
+    print(db_url)
     e = create_async_engine(db_url, echo=False, max_overflow=25)
-
     try:
         async with e.begin() as con:
             await con.run_sync(m.Model.metadata.create_all)
@@ -79,12 +67,12 @@ async def engine():
         await drop_everything(e)
 
 
-@pytest.fixture
-async def dbsession(engine) -> AsyncSession:
+@pytest_asyncio.fixture(scope="function")
+async def dbsession(engine) -> AsyncGenerator[AsyncSession, Any]:
     async with AsyncSession(bind=engine) as session:
         yield session
 
 
-@pytest.fixture
+@pytest_asyncio.fixture(scope="function")
 def creator(dbsession) -> Creator:
     return Creator(dbsession)
