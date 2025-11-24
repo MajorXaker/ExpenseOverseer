@@ -2,17 +2,16 @@ from datetime import date
 
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.keyboards.category import get_category_keyboard
-from core.keyboards.main_menu import get_main_menu_keyboard
-from core.message_parsing import parse_message
 from core.transactions import (
-    get_last_transactions,
     record_transaction,
     set_transaction_category,
 )
+from models.dto.parsed_message import ParsedMessage
 from models.dto.transaction import Transaction
 from models.dto.user_data import UserData
 from models.enums.currency import CurrencyEnum
@@ -20,6 +19,10 @@ from models.enums.transaction_type import TransactionType
 from utils.exceptions import InvalidAmountException
 
 transaction_router = Router()
+
+
+class CreateTransactionFSM(StatesGroup):
+    after_creation_update_category = State()
 
 
 @transaction_router.message(F.text.regexp(r"^([0-9.+-]+)\s+(.+)$"))
@@ -30,7 +33,7 @@ async def handle_numbered_message(
     state: FSMContext,
 ):
     try:
-        parsed_message = parse_message(message.text)
+        parsed_message = ParsedMessage.from_message(message.text)
     except InvalidAmountException as e:
         await message.answer(f"Failed to record: unrecognizable amount {e}")
         return
@@ -48,19 +51,20 @@ async def handle_numbered_message(
         transaction_type=transaction_type,
     )
     transaction_id = await record_transaction(session, transaction)
+    transaction.internal_id = transaction_id
 
     keyboard = await get_category_keyboard(session)
+
+    await state.set_state(CreateTransactionFSM.update_category)
     await message.answer(
         f"Recorded: {transaction.human_readable}", reply_markup=keyboard
     )
 
-    await state.update_data(
-        dict(transaction_id=transaction_id, transaction_type=transaction_type)
-    )
+    await state.update_data(transaction=transaction)
 
 
 # Handle category selection
-@transaction_router.callback_query(F.data.startswith("cat_"))
+@transaction_router.callback_query(CreateTransactionFSM.after_creation_update_category)
 async def process_category(
     callback: CallbackQuery,
     state: FSMContext,
@@ -77,38 +81,14 @@ async def process_category(
         await callback.answer()
 
     state_data = await state.get_data()
-    transaction_id = state_data["transaction_id"]
-    transaction_type = state_data["transaction_type"]
+    transaction = state_data["transaction"]
 
     await set_transaction_category(
         session=session,
-        transaction_id=transaction_id,
-        transaction_type=transaction_type,
+        transaction_id=transaction.internal_id,
+        transaction_type=transaction.transaction_type,
         category_id=category_id,
     )
 
     await callback.answer()
-
-
-@transaction_router.message(F.text == "📊 Transactions")
-async def show_transactions(
-    message: Message,
-    session: AsyncSession,
-    user_data: UserData,
-    state: FSMContext,
-):
-    transactions = await get_last_transactions(session, user_data.user_id, limit=5)
-
-    if not transactions:
-        await message.answer(
-            "No transactions yet.", reply_markup=get_main_menu_keyboard()
-        )
-        return
-
-    # Format transactions
-    text = "**Your Last 5 Transactions**\n\n"
-    for idx, tx in enumerate(transactions, 1):
-        date_text = tx.date.strftime("%Y.%m.%d")
-        text += f"{idx}. ({date_text}): {tx.human_readable}\n"
-
-    await message.answer(text, reply_markup=get_main_menu_keyboard())
+    await state.clear()

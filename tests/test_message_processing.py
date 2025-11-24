@@ -2,7 +2,6 @@ from decimal import Decimal as D
 
 import pytest
 
-from core.message_parsing import parse_message
 from models.dto.parsed_message import ParsedMessage
 
 
@@ -50,5 +49,5 @@ class TestMessageProcessing:
     async def test_message_parsing(
         self, message_text: str, expected_result: tuple[D, str]
     ):
-        processed_result = parse_message(message_text)
+        processed_result = ParsedMessage.from_message(message_text)
         assert processed_result == expected_result
