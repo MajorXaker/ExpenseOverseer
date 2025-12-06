@@ -23,6 +23,7 @@ from models.dto.transaction import Transaction
 from models.dto.user_data import UserData
 from models.enums.flow_type import TransactionFlowBranchesEnum
 from utils.config import log
+from utils.fsm_utils import back_handler_wrapper
 
 edit_delete_transaction_router = Router()
 
@@ -46,20 +47,7 @@ def _make_transactions_text(transactions: list[Transaction]) -> str | None:
     return text
 
 
-def _back_handler_wrapper(func):
-    """Removes any inline keyboard if pressed 'back' button on this keyboard"""
-
-    async def wrapper(*args, callback: CallbackQuery, state: FSMContext, **kwargs):
-        if callback.data == "back":
-            await callback.message.edit_reply_markup(reply_markup=None)
-            await state.clear()
-        else:
-            return await func(*args, callback=callback, state=state, **kwargs)
-
-    return wrapper
-
-
-@_back_handler_wrapper
+@back_handler_wrapper
 @edit_delete_transaction_router.message(F.text == "/transactions")
 async def show_transactions(
     message: Message,
@@ -84,7 +72,7 @@ async def show_transactions(
     await message.answer(text, reply_markup=keyboard)
 
 
-@_back_handler_wrapper
+@back_handler_wrapper
 @edit_delete_transaction_router.callback_query(EditDeleteFSM.select_action)
 async def process_actions_select(
     callback: CallbackQuery,
@@ -113,7 +101,7 @@ async def process_actions_select(
             await callback.message.edit_reply_markup(reply_markup=None)
 
 
-@_back_handler_wrapper
+@back_handler_wrapper
 @edit_delete_transaction_router.callback_query(EditDeleteFSM.delete_state)
 async def process_delete_transaction(
     callback: CallbackQuery,
@@ -136,7 +124,7 @@ async def process_delete_transaction(
     await callback.message.edit_text(text=new_text)
 
 
-@_back_handler_wrapper
+@back_handler_wrapper
 @edit_delete_transaction_router.callback_query(EditDeleteFSM.edit_state)
 async def process_select_for_editing(
     callback: CallbackQuery,
@@ -156,7 +144,7 @@ async def process_select_for_editing(
     )
 
 
-@_back_handler_wrapper
+@back_handler_wrapper
 @edit_delete_transaction_router.callback_query(EditDeleteFSM.edit_select_part)
 async def process_select_part_for_editing(
     callback: CallbackQuery,

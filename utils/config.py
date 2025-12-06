@@ -17,3 +17,6 @@ settings = Dynaconf(
 )
 
 log = logging.getLogger(__name__)
+
+mpl_logger = logging.getLogger("matplotlib")
+mpl_logger.setLevel(logging.INFO)

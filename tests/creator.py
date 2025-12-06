@@ -52,6 +52,7 @@ class Creator:
         amount: Decimal | int | float = None,
         description: str = "expense",
         category_id: int = None,
+        created_at: datetime.datetime = datetime.datetime.now(),
     ):
         if not amount:
             amount = Decimal(random.randint(1, 10000)) / 100
@@ -66,6 +67,7 @@ class Creator:
                     model.description: description,
                     model.category_id: category_id,
                     model.transaction_date: datetime.datetime.now(),
+                    model.created_at: created_at,
                 }
             )
         )
@@ -76,6 +78,7 @@ class Creator:
         amount: Decimal | int | float = None,
         description: str = "expense",
         category_id: int = None,
+        created_at: datetime.datetime = datetime.datetime.now(),
     ):
         return await self._create_transaction(
             model=m.Credit,
@@ -83,6 +86,7 @@ class Creator:
             amount=amount,
             description=description,
             category_id=category_id,
+            created_at=created_at,
         )
 
     async def create_debit(
@@ -98,4 +102,18 @@ class Creator:
             amount=amount,
             description=description,
             category_id=category_id,
+        )
+
+    async def create_category(
+            self,
+            category_name: str,
+    ):
+        return await self.session.scalar(
+            sa.insert(m.TransactionCategory)
+            .values(
+                {
+                    m.TransactionCategory.name: category_name,
+                }
+            )
+            .returning(m.TransactionCategory.id)
         )
