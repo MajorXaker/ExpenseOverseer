@@ -26,7 +26,7 @@ class TestAnalytics:
             category_id=category_a_id,
             amount=3,
             description="coffee",
-            created_at = datetime(year=2021, month=1, day=15),
+            created_at=datetime(year=2021, month=1, day=15),
         )
         await creator.create_credit(
             user_id=user_id,
@@ -65,4 +65,7 @@ class TestAnalytics:
             )
             await stats_creator.fetch_last_month()
 
-        assert stats_creator.data == {'Category_a': Decimal('103'), 'Category_b': Decimal('163')}
+        assert stats_creator.data == {
+            "Category_a": Decimal("103"),
+            "Category_b": Decimal("163"),
+        }

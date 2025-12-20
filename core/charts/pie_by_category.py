@@ -50,9 +50,9 @@ def get_month_window(months_ago: int = 0) -> tuple[datetime, datetime]:
 class CategoryPieChartCreator:
 
     def __init__(
-            self,
-            session: AsyncSession,
-            user_id: int,
+        self,
+        session: AsyncSession,
+        user_id: int,
     ):
         self.session = session
         self.user_id = user_id
@@ -95,13 +95,17 @@ class CategoryPieChartCreator:
         data = await self.session.execute(query)
 
         self.data = {
-            line.category_name.capitalize() if line.category_name else "Unknown": line.sum
+            (
+                line.category_name.capitalize() if line.category_name else "Unknown"
+            ): line.sum
             for line in data
         }
 
     def chart_as_bytes(self) -> bytes:
         if not self.data:
-            raise ValueError("No data available. Call fetch_last_month() or fetch_current_month() first.")
+            raise ValueError(
+                "No data available. Call fetch_last_month() or fetch_current_month() first."
+            )
 
         # Prepare data
         labels = list(self.data.keys())
@@ -111,28 +115,24 @@ class CategoryPieChartCreator:
 
         # Create figure and axis
         fig, ax = plt.subplots(
-            figsize=(10, 8),
-            facecolor='#1a1a1a',  # Dark background
-            dpi=100
+            figsize=(10, 8), facecolor="#1a1a1a", dpi=100  # Dark background
         )
-        ax.set_facecolor('#1a1a1a')
+        ax.set_facecolor("#1a1a1a")
 
         # Create pie chart
         wedges, texts, autotexts = ax.pie(
             values,
             labels=None,
             colors=colors,
-            autopct='%1.1f%%',
+            autopct="%1.1f%%",
             startangle=90,
-            wedgeprops={'edgecolor': '#000000', 'linewidth': 1.5},
-            textprops={
-                'fontsize': 11,
-                'weight': 'bold',
-                'color': '#FFFFFF'
-            }
+            wedgeprops={"edgecolor": "#000000", "linewidth": 1.5},
+            textprops={"fontsize": 11, "weight": "bold", "color": "#FFFFFF"},
         )
 
-        legend_labels = [f"{name}: {amount:.2f}" for name, amount in zip(labels, values)]
+        legend_labels = [
+            f"{name}: {amount:.2f}" for name, amount in zip(labels, values)
+        ]
         ax.legend(
             wedges,
             legend_labels,
@@ -146,29 +146,29 @@ class CategoryPieChartCreator:
 
         # Style percentage text
         for autotext in autotexts:
-            autotext.set_color('#000000')
+            autotext.set_color("#000000")
             autotext.set_fontsize(10)
-            autotext.set_weight('bold')
+            autotext.set_weight("bold")
 
         # Add title
         ax.set_title(
-            'Monthly Expenses Breakdown',
+            "Monthly Expenses Breakdown",
             fontsize=24,
-            color='#FFFFFF',
-            weight='bold',
-            pad=20
+            color="#FFFFFF",
+            weight="bold",
+            pad=20,
         )
 
         # Convert to bytes
         buffer = BytesIO()
         plt.savefig(
             buffer,
-            format='png',
-            bbox_inches='tight',
-            facecolor='#1a1a1a',
-            edgecolor='none',
+            format="png",
+            bbox_inches="tight",
+            facecolor="#1a1a1a",
+            edgecolor="none",
             pad_inches=0.3,
-            dpi=100
+            dpi=100,
         )
         buffer.seek(0)
         plt.close(fig)

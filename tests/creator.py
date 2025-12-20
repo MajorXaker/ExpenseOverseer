@@ -105,8 +105,8 @@ class Creator:
         )
 
     async def create_category(
-            self,
-            category_name: str,
+        self,
+        category_name: str,
     ):
         return await self.session.scalar(
             sa.insert(m.TransactionCategory)

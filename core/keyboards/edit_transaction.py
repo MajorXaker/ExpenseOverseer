@@ -15,10 +15,13 @@ def get_edit_delete_pass_keyboard():
     return builder.as_markup()
 
 
-def chose_edit_delete_transaction_keyboard(flow_type: TransactionFlowBranchesEnum):
+def chose_edit_delete_transaction_keyboard(
+    flow_type: TransactionFlowBranchesEnum,
+    actions_qty: int,
+):
     builder = InlineKeyboardBuilder()
 
-    for n in range(0, 5):
+    for n in range(0, actions_qty):
         builder.button(
             text=f"{flow_type.capitalize()} {n+1} transaction",
             callback_data=f"{flow_type}_{n}",
@@ -27,7 +30,18 @@ def chose_edit_delete_transaction_keyboard(flow_type: TransactionFlowBranchesEnu
 
     builder.button(text="Back", callback_data="back")
 
-    builder.adjust(2)
+    row_width = 2
+
+    button_rows = [row_width] * (actions_qty // row_width) + [
+        (actions_qty % row_width),
+        1,
+    ]
+    if actions_qty % row_width > 0:
+        button_rows.append(row_width)
+
+    button_rows.append(1)
+
+    builder.adjust(*button_rows)
     return builder.as_markup()
 
 

@@ -22,7 +22,7 @@ from models.dto.parsed_message import ParsedMessage
 from models.dto.transaction import Transaction
 from models.dto.user_data import UserData
 from models.enums.flow_type import TransactionFlowBranchesEnum
-from utils.config import log
+from utils.config import log, settings
 from utils.fsm_utils import back_handler_wrapper
 
 edit_delete_transaction_router = Router()
@@ -48,14 +48,21 @@ def _make_transactions_text(transactions: list[Transaction]) -> str | None:
 
 
 @back_handler_wrapper
-@edit_delete_transaction_router.message(F.text == "/transactions")
+@edit_delete_transaction_router.message(F.text == "/modify")
 async def show_transactions(
     message: Message,
     session: AsyncSession,
     user_data: UserData,
     state: FSMContext,
 ):
-    transactions = await get_last_transactions(session, user_data.user_id, limit=5)
+    max_transaction_qty = settings.LAST_TRANSACTIONS_QTY
+    transactions = await get_last_transactions(
+        session=session,
+        user_id=user_data.user_id,
+        limit=max_transaction_qty,
+    )
+
+    real_transactions_qty = len(transactions)
 
     if not transactions:
         await message.answer("No transactions yet.")
@@ -64,7 +71,7 @@ async def show_transactions(
     await state.update_data(transactions=transactions, user_id=user_data.user_id)
 
     # Format transactions
-    text = "**Your Last 5 Transactions**\n\n"
+    text = f"**Your Last {real_transactions_qty} Transactions**\n\n"
     text += _make_transactions_text(transactions)
 
     keyboard = get_edit_delete_pass_keyboard()
@@ -78,10 +85,12 @@ async def process_actions_select(
     callback: CallbackQuery,
     state: FSMContext,
 ):
+    state_data = await state.get_data()
     match callback.data:
         case TransactionFlowBranchesEnum.DELETE:
             keyboard = chose_edit_delete_transaction_keyboard(
-                TransactionFlowBranchesEnum.DELETE
+                TransactionFlowBranchesEnum.DELETE,
+                actions_qty=len(state_data["transactions"]),
             )
             await callback.message.edit_reply_markup(reply_markup=keyboard)
             await state.set_state(EditDeleteFSM.delete_state)
@@ -92,7 +101,8 @@ async def process_actions_select(
         case TransactionFlowBranchesEnum.EDIT:
             await callback.answer("Chose transaction you want to edit")
             keyboard = chose_edit_delete_transaction_keyboard(
-                TransactionFlowBranchesEnum.EDIT
+                TransactionFlowBranchesEnum.EDIT,
+                actions_qty=len(state_data["transactions"]),
             )
             await callback.message.edit_reply_markup(reply_markup=keyboard)
             await state.set_state(EditDeleteFSM.edit_state)
@@ -115,10 +125,14 @@ async def process_delete_transaction(
     await delete_transaction(
         session, selected_transaction.internal_id, selected_transaction.transaction_type
     )
+    transaction_qty = settings.LAST_TRANSACTIONS_QTY
+    transactions = await get_last_transactions(
+        session=session,
+        user_id=state_data["user_id"],
+        limit=transaction_qty,
+    )
 
-    transactions = await get_last_transactions(session, state_data["user_id"], limit=5)
-
-    new_text = "**Your Last 5 Transactions (updated)**\n\n"
+    new_text = f"**Your Last {transaction_qty} Transactions (updated)**\n\n"
     new_text += _make_transactions_text(transactions)
 
     await callback.message.edit_text(text=new_text)

@@ -30,6 +30,7 @@ dp.include_router(settings_router)
 dp.include_router(analytics_router)
 dp.include_router(text_router)
 
+
 async def main() -> None:
 
     bot = Bot(
@@ -39,8 +40,12 @@ async def main() -> None:
     log.info(f"Starting bot v{settings.VERSION}")
 
     commands = [
-        BotCommand(command="/transactions", description="Show my last transactions"),
-        BotCommand(command="/analytics", description="Show tools to analyze transactions"),
+        BotCommand(
+            command="/modify", description="Show last transaction and modify them"
+        ),
+        BotCommand(
+            command="/analytics", description="Show tools to analyze transactions"
+        ),
         BotCommand(command="/settings", description="Configure bot settings"),
         BotCommand(command="/help", description="Show instructions"),
     ]

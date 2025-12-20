@@ -12,15 +12,16 @@ from utils.fsm_utils import back_handler_wrapper
 
 analytics_router = Router()
 
+
 class AnalyticsFSM(StatesGroup):
     analytics_initial = State()
 
 
 @analytics_router.message(F.text == "/analytics")
 async def help_command(
-        message: Message,
-        user_data: UserData,
-        state: FSMContext,
+    message: Message,
+    user_data: UserData,
+    state: FSMContext,
 ):
     keyboard = get_analytics_initial_keyboard()
     await state.set_state(AnalyticsFSM.analytics_initial)
@@ -41,7 +42,6 @@ async def process_actions_select(
     match callback.data:
         case "analytics_pie":
             await callback.message.edit_reply_markup(reply_markup=None)
-
 
             pie_chart_creator = CategoryPieChartCreator(
                 session=session,

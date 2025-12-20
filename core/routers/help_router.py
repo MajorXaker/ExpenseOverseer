@@ -1,8 +1,6 @@
 from aiogram import F, Router
 from aiogram.types import Message
 
-from core.keyboards.main_menu import get_main_menu_keyboard
-
 help_router = Router()
 
 
@@ -29,4 +27,4 @@ def get_help_message() -> str:
 @help_router.message(F.text == "/help")
 async def help_command(message: Message):
     help_text = get_help_message()
-    await message.answer(help_text, reply_markup=get_main_menu_keyboard())
+    await message.answer(help_text)
