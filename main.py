@@ -17,6 +17,7 @@ from core.routers.settings import settings_router
 from core.routers.transactions.base import transaction_router
 from core.routers.transactions.edit_delete import edit_delete_transaction_router
 from utils.config import log, settings
+from utils.db import verify_connection
 
 dp = Dispatcher()
 dp.update.outer_middleware(DatabaseMiddleware())
@@ -32,6 +33,7 @@ dp.include_router(text_router)
 
 
 async def main() -> None:
+    await verify_connection()
 
     bot = Bot(
         token=settings.TG_BOT_TOKEN,

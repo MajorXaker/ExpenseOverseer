@@ -1,4 +1,3 @@
-from datetime import datetime
 from io import BytesIO
 
 import matplotlib.pyplot as plt
@@ -7,48 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 import models.db_models as m
 from core.charts import get_colors
-
-
-def get_month_window(months_ago: int = 0) -> tuple[datetime, datetime]:
-    """
-    Calculate month boundaries in pure Python.
-    Returns (start_datetime, end_datetime) for the target month.
-
-    Args:
-        months_ago: 0 = current month, 1 = previous month, etc.
-
-    Returns:
-        Tuple of (month_start, month_end) as datetime objects
-    """
-    now = datetime.now()
-
-    # Calculate target month by subtracting months
-    year = now.year
-    month = now.month
-
-    # Subtract months_ago months
-    month -= months_ago
-    while month <= 0:
-        month += 12
-        year -= 1
-
-    # First day of target month at midnight
-    month_start = datetime(year, month, 1, 0, 0, 0)
-
-    # First day of next month at midnight (exclusive end)
-    next_month = month + 1
-    next_year = year
-    if next_month > 12:
-        next_month = 1
-        next_year += 1
-
-    month_end = datetime(next_year, next_month, 1, 0, 0, 0)
-
-    return month_start, month_end
+from core.charts.utils import get_month_window
 
 
 class CategoryPieChartCreator:
-
     def __init__(
         self,
         session: AsyncSession,
@@ -115,7 +76,9 @@ class CategoryPieChartCreator:
 
         # Create figure and axis
         fig, ax = plt.subplots(
-            figsize=(10, 8), facecolor="#1a1a1a", dpi=100  # Dark background
+            figsize=(10, 8),
+            facecolor="#1a1a1a",
+            dpi=100,  # Dark background
         )
         ax.set_facecolor("#1a1a1a")
 

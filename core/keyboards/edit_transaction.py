@@ -23,7 +23,7 @@ def chose_edit_delete_transaction_keyboard(
 
     for n in range(0, actions_qty):
         builder.button(
-            text=f"{flow_type.capitalize()} {n+1} transaction",
+            text=f"{flow_type.capitalize()} {n + 1} transaction",
             callback_data=f"{flow_type}_{n}",
         )
         # n+1 because ordinary users are not counting from 0

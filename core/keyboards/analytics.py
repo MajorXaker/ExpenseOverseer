@@ -5,8 +5,9 @@ def get_analytics_initial_keyboard():
     builder = InlineKeyboardBuilder()
 
     builder.button(text="Last Month Pie", callback_data="analytics_pie")
+    builder.button(text="Last 2 Month Cumulative", callback_data="analytics_chart")
     builder.button(text="Last Month CSV", callback_data="analytics_csv")
     builder.button(text="Back", callback_data="back")
 
-    builder.adjust(2, 1)
+    builder.adjust(2, 1, 1)
     return builder.as_markup()

@@ -1,8 +1,9 @@
 from contextlib import asynccontextmanager
 
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncConnection, AsyncSession, create_async_engine
 
-from utils.config import settings
+from utils.config import log, settings
 
 db_url = (
     f"postgresql+asyncpg://"
@@ -37,3 +38,9 @@ async def ro_session() -> AsyncConnection:
 
 
 ro_session = asynccontextmanager(ro_session)
+
+
+async def verify_connection():
+    async with get_session() as session:
+        await session.execute((text("SELECT 1")))
+    log.info("Database connection established")
