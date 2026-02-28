@@ -47,18 +47,18 @@ run: ## start server
 
 .PHONY: format
 format: ## format project files
-	chmod +x ./lint.sh
-	black .
+# 	chmod +x ./lint.sh
+	ruff format
 	ruff check --fix
 	ruff check --select I --fix
-	ruff format
 
 .PHONY: lint
 lint: ## lint project files
-	chmod +x ./lint.sh
-	./lint.sh ruff check --diff
-	./lint.sh ruff check --diff --select I
-	./lint.sh ruff format --check --diff
+# 	chmod +x ./lint.sh
+	ruff check --diff
+	ruff check --diff --select I
+	ruff format --check --diff
+# 	ty check
 
 .PHONY: test
 test: ## run tests

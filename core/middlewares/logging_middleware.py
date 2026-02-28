@@ -21,7 +21,8 @@ class LoggingMiddleware:
         Log incoming message and pass it to the next handler.
         """
         log.info(
-            f"[MIDDLEWARE] Incoming message from user {event.from_user.id}: '{event.text}'"
+            "[MIDDLEWARE] Incoming message from user "
+            f"{event.from_user.id}: '{event.text}'"
         )
 
         # Call the next handler in the chain

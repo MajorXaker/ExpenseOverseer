@@ -38,7 +38,8 @@ class UserTranslationMiddleware:
 
         if not user_id:
             log.info(
-                f"User '{event.from_user.username}' not found, but whitelisted. Creating it."
+                f"User '{event.from_user.username}' not found, but whitelisted. "
+                "Creating it."
             )
             user_id = await create_user(data["session"], event.from_user)
 

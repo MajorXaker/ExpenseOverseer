@@ -2,14 +2,18 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import BufferedInputFile, CallbackQuery, Message
-from models.dto.user_data import UserData
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from core.analytics.charts import (
+    CategoryPieChartCreator,
+    CumulativeSpendingChartCreator,
+)
+from core.analytics.csv_export import MonthlySpendingCSVExporter
+from core.analytics.utils import get_month_window
+from core.keyboards.analytics import get_analytics_initial_keyboard
+from models.dto.user_data import UserData
 from utils.config import log
 from utils.fsm_utils import back_handler_wrapper
-
-from core.charts.cumulative_chart import CumulativeSpendingChartCreator
-from core.charts.pie_by_category import CategoryPieChartCreator
-from core.keyboards.analytics import get_analytics_initial_keyboard
 
 analytics_router = Router()
 
@@ -55,7 +59,6 @@ async def process_actions_select(
                 chat_id=callback.message.chat.id,
                 photo=tg_file,
             )
-            await state.clear()
         case "analytics_chart":
             chart_creator = CumulativeSpendingChartCreator(
                 session=session,
@@ -69,9 +72,24 @@ async def process_actions_select(
                 chat_id=callback.message.chat.id,
                 photo=tg_file,
             )
-            await state.clear()
         case "analytics_csv":
+            csv_creator = MonthlySpendingCSVExporter(
+                session=session,
+                user_id=state_data["user_data"].user_id,
+            )
+            await csv_creator.fetch_previous_month()
+            data = csv_creator.export_as_bytes()
+
+            previous_month_start, _ = get_month_window(1)
+            file_name = f"transactions {previous_month_start.strftime('%Y %b')}.csv"
+
+            tg_file = BufferedInputFile(data, filename=file_name)
+            await callback.message.bot.send_document(
+                chat_id=callback.message.chat.id,
+                document=tg_file,
+            )
+
             await callback.answer("TBD")
-            await state.clear()
         case _:
             log.warning(f"Unhandled callback request '{callback.data}'")
+    await state.clear()

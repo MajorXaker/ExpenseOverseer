@@ -4,7 +4,7 @@ from decimal import Decimal
 import pytest
 from freezegun import freeze_time
 
-from core.charts.pie_by_category import CategoryPieChartCreator
+from core.analytics.charts import CategoryPieChartCreator
 
 
 @pytest.mark.asyncio

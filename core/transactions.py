@@ -19,7 +19,8 @@ def _create_insert_query(transaction: Transaction) -> sa.Insert:
             {
                 model.user_id: transaction.user_id,
                 model.amount: transaction.amount,
-                model.currency: CurrencyEnum.BYN,  # hardcoded currency for version 0.0.1
+                model.currency: CurrencyEnum.BYN,
+                # hardcoded currency for version 0.0.1
                 model.description: transaction.description,
                 model.transaction_date: transaction.date,
             }

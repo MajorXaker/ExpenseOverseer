@@ -1,6 +1,6 @@
 [project]
 name = "ExpanseOverseer"
-version = "0.3.1"
+version = "0.5.1"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">3.13,<3.14"
@@ -15,25 +15,22 @@ dependencies = [
 	"alembic",
 	"psycopg2-binary",
 	"aiogram",
-	#	"pillow",
-	#	"plotly",
-	#	"pandas",
-	#	"kaleido",
 	"matplotlib>=3.10.7",
 ]
 
 
 [project.optional-dependencies]
 dev = [
-    "mock>=4.0.3",
-    "pytest>=3.4",
-    "pytest-asyncio>=0.26.0",
-    "coverage>=7.8.0",
-    "freezegun>=1.5.5",
-    "ruff>=0.12.11",
-    "black==25.9.0",
+	"mock>=4.0.3",
+	"pytest>=3.4",
+	"pytest-asyncio>=0.26.0",
+	"coverage>=7.8.0",
+	"freezegun>=1.5.5",
+	"ruff>=0.12.11",
+	"black==25.9.0",
 	"pandas>=2.3.3",
 	"notebook>=7.5.0",
+	"plotly",
 ]
 
 
@@ -43,3 +40,41 @@ url = "https://pypi.python.org/simple"
 explicit = true
 
 
+[tool.ruff]
+src = ["app"]
+target-version = "py312"
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    "venv",
+    "env",
+    "build",
+    "dist",
+    "*.egg-info",
+    "settings.py",
+    "**/migrations/**",
+	"*.ipynb",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # Pyflakes
+    "C90", # mccabe complexity
+]
+
+mccabe.max-complexity = 10
+
+[tool.ruff.lint.isort]
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder"
+]
+combine-as-imports = true
+split-on-trailing-comma = true
+known-first-party = ["core", "models", "utils", "tests"]

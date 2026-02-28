@@ -1,3 +1,4 @@
+import random
 from datetime import datetime
 
 
@@ -43,3 +44,36 @@ def days_in_month(year: int, month: int) -> int:
         next_month = 1
         next_year += 1
     return (datetime(next_year, next_month, 1) - datetime(year, month, 1)).days
+
+
+CHART_COLORS = [
+    "gold",
+    "mediumturquoise",
+    "darkorange",
+    "lightgreen",
+    "crimson",
+    "dodgerblue",
+    "lime",
+    "orchid",
+    "darkolivegreen",
+    "deepskyblue",
+    "hotpink",
+    "teal",
+    "coral",
+    "slateblue",
+    "yellowgreen",
+    "tomato",
+    "steelblue",
+    "mediumspringgreen",
+    "mediumpurple",
+    "orangered",
+]
+
+
+def get_colors(n: int) -> list[str]:
+    result = set()
+    while len(result) < n:
+        candidate = random.choice(CHART_COLORS)
+        if candidate not in result:
+            result.add(candidate)
+    return list(result)

@@ -215,7 +215,9 @@ async def process_edit_value(
         new_value=parsed_message,
     )
     await message.reply(
-        f"Transaction Updated\n({transaction.date.strftime('%d/%m/%Y')}): {updated_transaction.human_readable}",
+        f"Transaction Updated\n"
+        f"({transaction.date.strftime('%d/%m/%Y')}): "
+        f"{updated_transaction.human_readable}",
         reply_markup=None,
     )
     await state.clear()
@@ -238,7 +240,9 @@ async def process_edit_description(
         new_description=message.text,
     )
     await message.reply(
-        f"Transaction Updated\n({transaction.date.strftime('%d/%m/%Y')}): {updated_transaction.human_readable}",
+        f"Transaction Updated\n"
+        f"({transaction.date.strftime('%d/%m/%Y')}): "
+        f"{updated_transaction.human_readable}",
         reply_markup=None,
     )
     await state.clear()
@@ -274,7 +278,9 @@ async def process_edit_category(
     )
 
     await callback.message.reply(
-        f"Transaction Updated\n({transaction.date.strftime('%d/%m/%Y')}): {updated_transaction.human_readable}",
+        f"Transaction Updated\n"
+        f"({transaction.date.strftime('%d/%m/%Y')}): "
+        f"{updated_transaction.human_readable}",
         reply_markup=None,
     )
     await state.clear()

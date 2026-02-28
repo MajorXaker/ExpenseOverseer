@@ -5,8 +5,7 @@ import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import models.db_models as m
-from core.charts import get_colors
-from core.charts.utils import get_month_window
+from core.analytics.utils import get_colors, get_month_window
 
 
 class CategoryPieChartCreator:
@@ -65,7 +64,8 @@ class CategoryPieChartCreator:
     def chart_as_bytes(self) -> bytes:
         if not self.data:
             raise ValueError(
-                "No data available. Call fetch_last_month() or fetch_current_month() first."
+                "No data available. "
+                "Call fetch_last_month() or fetch_current_month() first."
             )
 
         # Prepare data

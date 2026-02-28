@@ -4,12 +4,11 @@ from io import BytesIO
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-import models.db_models as m
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.charts import get_colors
-from core.charts.utils import days_in_month, get_month_window
+import models.db_models as m
+from core.analytics.utils import days_in_month, get_colors, get_month_window
 
 
 class CumulativeSpendingChartCreator:
