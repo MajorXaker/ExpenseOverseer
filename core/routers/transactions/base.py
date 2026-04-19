@@ -7,6 +7,7 @@ from aiogram.types import CallbackQuery, Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.keyboards.category import get_category_keyboard
+from core.language import texts
 from core.transactions import (
     record_transaction,
     set_transaction_category,
@@ -35,7 +36,8 @@ async def handle_numbered_message(
     try:
         parsed_message = ParsedMessage.from_message(message.text)
     except InvalidAmountException as e:
-        await message.answer(f"Failed to record: unrecognizable amount {e}")
+        text = user_data.lang(texts.transactions.base.fail)
+        await message.answer(f"{text} {e}")
         return
 
     transaction_type = (
@@ -56,9 +58,9 @@ async def handle_numbered_message(
     keyboard = await get_category_keyboard(session)
 
     await state.set_state(CreateTransactionFSM.after_creation_update_category)
-    await message.answer(
-        f"Recorded: {transaction.human_readable}", reply_markup=keyboard
-    )
+    text = user_data.lang(texts.transactions.base.recorded)
+    human_readable = transaction.to_human_readable(user_data.lang)
+    await message.answer(f"{text} {human_readable}", reply_markup=keyboard)
 
     await state.update_data(transaction=transaction)
 

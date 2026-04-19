@@ -10,6 +10,8 @@ from core.keyboards.edit_transaction import (
     get_edit_choose_part_keyboard,
     get_edit_delete_pass_keyboard,
 )
+from core.language import texts
+from core.language.base import Translator
 from core.transactions import (
     delete_transaction,
     get_last_transactions,
@@ -39,11 +41,14 @@ class EditDeleteFSM(StatesGroup):
     edit_update_description = State()
 
 
-def _make_transactions_text(transactions: list[Transaction]) -> str | None:
+def _make_transactions_text(
+    transactions: list[Transaction],
+    translator: Translator,
+) -> str | None:
     text = ""
     for n, tx in enumerate(transactions, 1):
         date_text = tx.date.strftime("%Y.%m.%d")
-        text += f"{n}. ({date_text}): {tx.human_readable}\n"
+        text += f"{n}. ({date_text}): {tx.to_human_readable(translator)}\n"
     return text
 
 
@@ -65,13 +70,17 @@ async def show_transactions(
     real_transactions_qty = len(transactions)
 
     if not transactions:
-        await message.answer("No transactions yet.")
+        await message.answer(user_data.lang(texts.transactions.no_transactions))
         return
 
     await state.update_data(transactions=transactions, user_id=user_data.user_id)
 
     # Format transactions
-    text = f"**Your Last {real_transactions_qty} Transactions**\n\n"
+    translated_header = user_data.lang(
+        texts.transactions.last_n,
+        qty=real_transactions_qty,
+    )
+    text = translated_header + "\n\n"
     text += _make_transactions_text(transactions)
 
     keyboard = get_edit_delete_pass_keyboard()
@@ -84,6 +93,7 @@ async def show_transactions(
 async def process_actions_select(
     callback: CallbackQuery,
     state: FSMContext,
+    user_data: UserData,
 ):
     state_data = await state.get_data()
     match callback.data:
@@ -95,11 +105,11 @@ async def process_actions_select(
             await callback.message.edit_reply_markup(reply_markup=keyboard)
             await state.set_state(EditDeleteFSM.delete_state)
             await callback.answer(
-                "⚠️ This will irreversibly delete the selected transaction!",
+                user_data.lang(texts.transactions.delete),
                 show_alert=True,  # Shows as popup/alert
             )
         case TransactionFlowBranchesEnum.EDIT:
-            await callback.answer("Chose transaction you want to edit")
+            await callback.answer(user_data.lang(texts.transactions.edit.choose))
             keyboard = chose_edit_delete_transaction_keyboard(
                 TransactionFlowBranchesEnum.EDIT,
                 actions_qty=len(state_data["transactions"]),
@@ -117,6 +127,7 @@ async def process_delete_transaction(
     callback: CallbackQuery,
     state: FSMContext,
     session: AsyncSession,
+    user_data: UserData,
 ):
     number_to_delete = int(callback.data.lstrip("delete_"))
     state_data = await state.get_data()
@@ -131,8 +142,11 @@ async def process_delete_transaction(
         user_id=state_data["user_id"],
         limit=transaction_qty,
     )
-
-    new_text = f"**Your Last {transaction_qty} Transactions (updated)**\n\n"
+    translated_header = user_data.lang(
+        texts.transactions.last_n_updated,
+        qty=transaction_qty,
+    )
+    new_text = translated_header + "\n\n"
     new_text += _make_transactions_text(transactions)
 
     await callback.message.edit_text(text=new_text)
@@ -143,6 +157,7 @@ async def process_delete_transaction(
 async def process_select_for_editing(
     callback: CallbackQuery,
     state: FSMContext,
+    user_data: UserData,
 ):
     updated_transaction_num = int(callback.data.lstrip("edit_"))
     state_data = await state.get_data()
@@ -153,9 +168,7 @@ async def process_select_for_editing(
     keyboard = get_edit_choose_part_keyboard()
     await callback.message.edit_reply_markup(reply_markup=keyboard)
     await state.set_state(EditDeleteFSM.edit_select_part)
-    await callback.answer(
-        "Chose transaction you want to edit",
-    )
+    await callback.answer(user_data.lang(texts.transactions.edit.choose))
 
 
 @back_handler_wrapper
@@ -164,17 +177,22 @@ async def process_select_part_for_editing(
     callback: CallbackQuery,
     state: FSMContext,
     session: AsyncSession,
+    user_data: UserData,
 ):
     state_data = await state.get_data()
     transaction = state_data["transaction_to_update"]
 
-    text = f"Now updating: {transaction.human_readable}"
+    text = (
+        f"{user_data.lang(texts.transactions.edit.updating)}:"
+        f" {transaction.to_human_readable(user_data.lang)}"
+    )
 
     match callback.data:
         case "value":
             await callback.message.edit_reply_markup(reply_markup=None)
+            new_amount_text = user_data.lang(texts.transactions.edit.amount)
             await callback.message.reply(
-                text + "\nEnter new amount:",
+                f"{text}\n{new_amount_text}:",
                 reply_markup=ForceReply(
                     input_field_placeholder="50.00"  # Hint in input field
                 ),
@@ -182,8 +200,9 @@ async def process_select_part_for_editing(
             await state.set_state(EditDeleteFSM.edit_update_value)
         case "description":
             await callback.message.edit_reply_markup(reply_markup=None)
+            new_description_text = user_data.lang(texts.transactions.edit.description)
             await callback.message.reply(
-                "Enter new description",
+                f"{text}\n{new_description_text}:",
                 reply_markup=ForceReply(
                     input_field_placeholder="food"  # Hint in input field
                 ),
@@ -200,6 +219,7 @@ async def process_edit_value(
     message: Message,
     state: FSMContext,
     session: AsyncSession,
+    user_data: UserData,
 ):
     message_text = message.text
     if message_text.startswith("+"):
@@ -214,10 +234,11 @@ async def process_edit_value(
         transaction_type=transaction.transaction_type,
         new_value=parsed_message,
     )
+    success_text = user_data.lang(texts.transactions.edit.success)
     await message.reply(
-        f"Transaction Updated\n"
+        f"{success_text}\n"
         f"({transaction.date.strftime('%d/%m/%Y')}): "
-        f"{updated_transaction.human_readable}",
+        f"{updated_transaction.to_human_readable(user_data.lang)}",
         reply_markup=None,
     )
     await state.clear()
@@ -228,6 +249,7 @@ async def process_edit_description(
     message: Message,
     state: FSMContext,
     session: AsyncSession,
+    user_data: UserData,
 ):
 
     state_data = await state.get_data()
@@ -239,10 +261,11 @@ async def process_edit_description(
         transaction_type=transaction.transaction_type,
         new_description=message.text,
     )
+    success_text = user_data.lang(texts.transactions.edit.success)
     await message.reply(
-        f"Transaction Updated\n"
+        f"{success_text}\n"
         f"({transaction.date.strftime('%d/%m/%Y')}): "
-        f"{updated_transaction.human_readable}",
+        f"{updated_transaction.to_human_readable(user_data.lang)}",
         reply_markup=None,
     )
     await state.clear()
@@ -253,6 +276,7 @@ async def process_edit_category(
     callback: CallbackQuery,
     state: FSMContext,
     session: AsyncSession,
+    user_data: UserData,
 ):
     await callback.message.edit_reply_markup(reply_markup=None)
     category_str = callback.data.split("_")[1]
@@ -276,11 +300,11 @@ async def process_edit_category(
         transaction_id=transaction.internal_id,
         transaction_type=transaction.transaction_type,
     )
-
+    success_text = user_data.lang(texts.transactions.edit.success)
     await callback.message.reply(
-        f"Transaction Updated\n"
+        f"{success_text}\n"
         f"({transaction.date.strftime('%d/%m/%Y')}): "
-        f"{updated_transaction.human_readable}",
+        f"{updated_transaction.to_human_readable(user_data.lang)}",
         reply_markup=None,
     )
     await state.clear()

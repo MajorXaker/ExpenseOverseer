@@ -1,0 +1,128 @@
+{
+  "analytics": {
+    "help": {
+      "en": "Analytical data could be shown as chart or exported into csv",
+      "ru": "Аналитические данные могут быть отображены в виде диаграммы или экспортированы в CSV-файл",
+      "be": "Аналітычныя дадзеныя могуць быць паказаны як дыяграма або экспартаваны ў CSV-файл"
+    }
+  },
+  "transactions": {
+    "new": {
+      "fail": {
+        "en": "Failed to record: unrecognizable amount ",
+        "ru": "Не удалось сохранить: нераспознанная сумма",
+        "be": "Не атрымалася захаваць: нераспазнаная сума"
+      },
+      "recorded": {
+        "en": "Recorded",
+        "ru": "Сохранено",
+        "be": "Захавана"
+      },
+      "expense": {
+        "en": "expense",
+        "ru": "расход",
+        "be": "выдатак"
+      },
+      "income": {
+        "en": "income",
+        "ru": "доход",
+        "be": "даход"
+      },
+      "category": {
+        "en": "category",
+        "ru": "категория",
+        "be": "катэгорыя"
+      }
+    },
+    "last_n": {
+      "en": "**Your Last {qty} Transactions**",
+      "ru": "**Ваши последние {qty} транзакций**",
+      "be": "**Вашы апошнія {qty} транзакцый**",
+      "__replaceable": true
+    },
+    "last_n_updated": {
+      "en": "**Your Last {transaction_qty} Transactions (updated)**",
+      "ru": "**Ваши последние {transaction_qty} транзакций (обновлено)**",
+      "be": "**Вашы апошнія {transaction_qty} транзакцый (абноўлена)**",
+      "__replaceable": true
+    },
+    "no_transactions": {
+        "en": "No transactions yet.",
+        "ru": "Нет сохраненных транзакций",
+        "be": "Няма захаваных транзакцый"
+    },
+    "edit": {
+      "choose": {
+        "en":"Choose transaction you want to edit",
+        "ru": "Выберите транзакцию для редактирования",
+        "be": "Абярыце транзакцыю для рэдагавання"
+      },
+      "updating": {
+        "en":"Now updating",
+        "ru": "Изменяем",
+        "be": "Мяняем"
+      },
+      "amount": {
+        "en": "Enter new amount",
+        "ru": "Введите новую сумму",
+        "be": "Увядзіце новую суму"
+      },
+      "description": {
+        "en": "Enter new description",
+        "ru": "Введите новое описание",
+        "be": "Увядзіце новае апісанне"
+      },
+      "success": {
+        "en": "Transaction updated",
+        "ru": "Транзакция обновлена",
+        "be": "Транзакцыя абноўлена"
+      }
+    },
+    "delete": {
+      "en": "⚠️ This will irreversibly delete the selected transaction!",
+      "ru": "⚠️ Это действие безвозвратно удалит выбранную транзакцию!",
+      "be": "⚠️ Гэта дзеянне незваротна выдаліць абраную транзакцыю!"
+    }
+  },
+  "general": {
+    "wrong_command": {
+      "en": "Wrong command",
+      "ru": "Неверная команда",
+      "be": "Няправільная каманда"
+    },
+    "help": {
+      "en": "❓ **How to Use Expense Income Tracker**\n\n**Adding an Expense:**\n1. Enter the monetary amount (e.g., 50) and a description (e.g., 'Lunch at restaurant')\nIt should look like this:\n```50.45 Food\n12+1.4 Cinema Tickets\n70-28 Shop\n+500+25.5 Salary```\nYou could start with + to store data as income\nAlso you could use basic arithmetics (plus and minus) to calculate value\n2. Select a category from the buttons\n3. Done! Your transaction is saved.\n\n**View Transactions:**\nPress the '/transactions' button to see your recent expenses.\n\n**Settings:**\nPress the '/settings' button (coming soon).",
+      "ru": "❓ **Как пользоваться трекером доходов и расходов**\n\n**Добавление расхода:**\n1. Введите сумму (например, 50) и описание (например, 'Обед в ресторане')\nЭто должно выглядеть так:\n```50.45 Еда\n12+1.4 Билеты в кино\n70-28 Магазин\n+500+25.5 Зарплата```\nВы можете начать с +, чтобы сохранить данные как доход\nТакже можно использовать базовую арифметику (плюс и минус) для расчёта значения\n2. Выберите категорию с помощью кнопок\n3. Готово! Ваша транзакция сохранена.\n\n**Просмотр транзакций:**\nНажмите кнопку '/transactions', чтобы увидеть последние операции.\n\n**Настройки:**\nНажмите кнопку '/settings' (скоро будет доступно).",
+      "be": "❓ **Як карыстацца трэкером даходаў і выдаткаў**\n\n**Даданне выдатку:**\n1. Увядзіце суму (напрыклад, 50) і апісанне (напрыклад, 'Абед у рэстаране')\nГэта павінна выглядаць так:\n```50.45 Ежа\n12+1.4 Квіткі ў кіно\n70-28 Крама\n+500+25.5 Зарплата```\nВы можаце пачаць з +, каб захаваць дадзеныя як даход\nТаксама можна выкарыстоўваць базавую арыфметыку (плюс і мінус) для разліку значэння\n2. Абярыце катэгорыю з дапамогай кнопак\n3. Гатова! Ваша транзакцыя захавана.\n\n**Прагляд транзакцый:**\nНацісніце кнопку '/transactions', каб убачыць апошнія аперацыі.\n\n**Налады:**\nНацісніце кнопку '/settings' (хутка будзе даступна)."
+    }
+  },
+  "settings": {
+    "placeholder": {
+      "en": "⚙️ Settings\n\n🚧 This sections is in development. It would be available later",
+      "ru": "⚙️ Настройки\n\n🚧 В разработке, будет добавлено позднее",
+      "be": "⚙️ Налады\n\n🚧 Будзе дабаўлена паздней, яшчэ разрабляецца."
+    }
+  },
+  "commands": {
+    "modify": {
+      "en": "Show recent transactions and edit them",
+      "ru": "Показать последние транзакции и изменить их",
+      "be": "Паказаць апошнія транзакцыі і змяніць іх"
+    },
+    "analytics": {
+      "en": "Open transaction analytics tools",
+      "ru": "Открыть инструменты анализа транзакций",
+      "be": "Адкрыць інструменты аналізу транзакцый"
+    },
+    "settings": {
+      "en": "Configure bot settings",
+      "ru": "Настройки бота",
+      "be": "Налады бота"
+    },
+    "help": {
+      "en": "Show help",
+      "ru": "Неверная команда",
+      "be": "Паказаць даведку"
+    }
+  }
+}

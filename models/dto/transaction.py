@@ -4,6 +4,8 @@ from typing import Literal, Optional
 
 from pydantic import BaseModel
 
+from core.language import texts
+from core.language.base import Translator
 from models import db_models as m
 from models.enums.currency import CurrencyEnum
 from models.enums.transaction_type import TransactionType
@@ -23,17 +25,18 @@ class Transaction(BaseModel):
     category_id: Optional[int] = None
     category_name: Optional[str] = None
 
-    @property
-    def human_readable(self) -> str:
+    def to_human_readable(self, translator: Translator) -> str:
         text = (
-            "expense "
+            translator(texts.transaction.new.expense)
             if self.transaction_type == TransactionType.EXPENSE
-            else "income "
+            else translator(texts.transaction.new.income)
         )
-        text += f'{self.amount} {self.currency} "{self.description}"'
+        text += f' {self.amount} {self.currency} "{self.description}"'
 
         if self.category_name:
-            text += f' category: "{self.category_name}"'
+            text += (
+                f' {translator(texts.transaction.new.category)}: "{self.category_name}"'
+            )
         return text
 
     @staticmethod

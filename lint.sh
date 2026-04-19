@@ -2,7 +2,7 @@
 HAS_ERRORS=0
 
 # Get files changed from master, filter for Python files, exclude patterns
-for FILEPATH in $(git diff --name-only origin/master | grep "^app/.*\.py$"); do
+for FILEPATH in $(git diff --name-only origin/main | grep "^app/.*\.py$"); do
     # Skip file if it was deleted
     [ ! -f "$FILEPATH" ] && continue
 

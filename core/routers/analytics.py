@@ -11,6 +11,7 @@ from core.analytics.charts import (
 from core.analytics.csv_export import MonthlySpendingCSVExporter
 from core.analytics.utils import get_month_window
 from core.keyboards.analytics import get_analytics_initial_keyboard
+from core.language import texts
 from models.dto.user_data import UserData
 from utils.config import log
 from utils.fsm_utils import back_handler_wrapper
@@ -32,7 +33,7 @@ async def help_command(
     await state.set_state(AnalyticsFSM.analytics_initial)
     await state.update_data(user_data=user_data)
 
-    text = "Analytical data could be shown as chart or exported into csv"
+    text = user_data.lang(texts.analytics.help)
     await message.answer(text, reply_markup=keyboard)
 
 
