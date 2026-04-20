@@ -20,8 +20,8 @@ from utils.init_commands import init_commands
 
 dp = Dispatcher()
 dp.update.outer_middleware(DatabaseMiddleware())
-dp.message.outer_middleware(UserTranslationMiddleware())
-dp.message.outer_middleware(LoggingMiddleware())
+dp.update.outer_middleware(UserTranslationMiddleware())
+dp.message.middleware(LoggingMiddleware())
 
 dp.include_router(transaction_router)
 dp.include_router(edit_delete_transaction_router)

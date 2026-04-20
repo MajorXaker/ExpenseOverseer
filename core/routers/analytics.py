@@ -29,7 +29,7 @@ async def help_command(
     user_data: UserData,
     state: FSMContext,
 ):
-    keyboard = get_analytics_initial_keyboard()
+    keyboard = get_analytics_initial_keyboard(user_data.lang)
     await state.set_state(AnalyticsFSM.analytics_initial)
     await state.update_data(user_data=user_data)
 
@@ -43,6 +43,7 @@ async def process_actions_select(
     callback: CallbackQuery,
     state: FSMContext,
     session: AsyncSession,
+    user_data: UserData,
 ):
     state_data = await state.get_data()
     await callback.message.edit_reply_markup(reply_markup=None)
@@ -53,7 +54,14 @@ async def process_actions_select(
                 user_id=state_data["user_data"].user_id,
             )
             await pie_chart_creator.fetch_last_month()
-            image_bytes = pie_chart_creator.chart_as_bytes()
+
+            try:
+                image_bytes = pie_chart_creator.chart_as_bytes()
+            except ValueError:
+                await callback.message.reply(
+                    user_data.lang(texts.analytics.missing_data), reply_markup=None
+                )
+                return
 
             tg_file = BufferedInputFile(image_bytes, filename="chart.jpg")
             await callback.message.bot.send_photo(
@@ -89,8 +97,6 @@ async def process_actions_select(
                 chat_id=callback.message.chat.id,
                 document=tg_file,
             )
-
-            await callback.answer("TBD")
         case _:
             log.warning(f"Unhandled callback request '{callback.data}'")
     await state.clear()

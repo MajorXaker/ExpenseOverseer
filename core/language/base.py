@@ -52,6 +52,8 @@ class Translator:
     @staticmethod
     def _run_substitutions(text: str, **subs) -> str:
         for sub_key, sub_value in subs.items():
+            if not isinstance(sub_value, str):
+                sub_value = str(sub_value)
             try:
                 text = re.sub("{" + sub_key + "}", sub_value, text)
             except re.error as e:
