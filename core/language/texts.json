@@ -4,6 +4,26 @@
       "en": "Analytical data could be shown as chart or exported into csv",
       "ru": "Аналитические данные могут быть отображены в виде диаграммы или экспортированы в CSV-файл",
       "be": "Аналітычныя дадзеныя могуць быць паказаны як дыяграма або экспартаваны ў CSV-файл"
+    },
+    "missing_data": {
+      "en": "No last month data available.",
+      "ru": "Отсутствуют данные для аналитики.",
+      "be": "Адсутнічаюць дадзеныя для аналітыкі."
+    },
+    "analytics_pie": {
+      "en": "Last Month Pie",
+      "ru": "Круговая диаграмма за последний месяц",
+      "be": "Кругавая дыяграмма за апошні месяц"
+    },
+    "analytics_chart": {
+      "en": "Last 2 Month Cumulative",
+      "ru": "График расходов за 2 месяца",
+      "be": "Графік выдаткаў за 2 месяцы"
+    },
+    "analytics_csv": {
+      "en": "Last Month CSV",
+      "ru": "Экспорт последнего месяца в CSV-файл",
+      "be": "Экспарт апошняго месяца ў CSV-файл"
     }
   },
   "transactions": {
@@ -67,21 +87,45 @@
         "ru": "Введите новую сумму",
         "be": "Увядзіце новую суму"
       },
+      "amount_short": {
+        "en": "Amount",
+        "ru": "Сумма",
+        "be": "Сума"
+      },
       "description": {
         "en": "Enter new description",
         "ru": "Введите новое описание",
         "be": "Увядзіце новае апісанне"
       },
+      "description_short": {
+        "en": "Description",
+        "ru": "Описание",
+        "be": "Апісанне"
+      },
       "success": {
         "en": "Transaction updated",
         "ru": "Транзакция обновлена",
         "be": "Транзакцыя абноўлена"
+      },
+      "button": {
+        "en": "Edit transaction {i}",
+        "ru": "Редактировать транцзакцию {i}",
+        "be": "Рэдактаваць транзакцыю {i}",
+        "__replaceable": true
       }
     },
     "delete": {
-      "en": "⚠️ This will irreversibly delete the selected transaction!",
-      "ru": "⚠️ Это действие безвозвратно удалит выбранную транзакцию!",
-      "be": "⚠️ Гэта дзеянне незваротна выдаліць абраную транзакцыю!"
+      "alert": {
+        "en": "⚠️ This will irreversibly delete the selected transaction!",
+        "ru": "⚠️ Это действие безвозвратно удалит выбранную транзакцию!",
+        "be": "⚠️ Гэта дзеянне незваротна выдаліць абраную транзакцыю!"
+      },
+      "button": {
+        "en": "Delete transaction {i}",
+        "ru": "Удалить транцзакцию {i}",
+        "be": "Выдаліць транзакцыю {i}",
+        "__replaceable": true
+      }
     }
   },
   "general": {
@@ -94,6 +138,16 @@
       "en": "❓ **How to Use Expense Income Tracker**\n\n**Adding an Expense:**\n1. Enter the monetary amount (e.g., 50) and a description (e.g., 'Lunch at restaurant')\nIt should look like this:\n```50.45 Food\n12+1.4 Cinema Tickets\n70-28 Shop\n+500+25.5 Salary```\nYou could start with + to store data as income\nAlso you could use basic arithmetics (plus and minus) to calculate value\n2. Select a category from the buttons\n3. Done! Your transaction is saved.\n\n**View Transactions:**\nPress the '/transactions' button to see your recent expenses.\n\n**Settings:**\nPress the '/settings' button (coming soon).",
       "ru": "❓ **Как пользоваться трекером доходов и расходов**\n\n**Добавление расхода:**\n1. Введите сумму (например, 50) и описание (например, 'Обед в ресторане')\nЭто должно выглядеть так:\n```50.45 Еда\n12+1.4 Билеты в кино\n70-28 Магазин\n+500+25.5 Зарплата```\nВы можете начать с +, чтобы сохранить данные как доход\nТакже можно использовать базовую арифметику (плюс и минус) для расчёта значения\n2. Выберите категорию с помощью кнопок\n3. Готово! Ваша транзакция сохранена.\n\n**Просмотр транзакций:**\nНажмите кнопку '/transactions', чтобы увидеть последние операции.\n\n**Настройки:**\nНажмите кнопку '/settings' (скоро будет доступно).",
       "be": "❓ **Як карыстацца трэкером даходаў і выдаткаў**\n\n**Даданне выдатку:**\n1. Увядзіце суму (напрыклад, 50) і апісанне (напрыклад, 'Абед у рэстаране')\nГэта павінна выглядаць так:\n```50.45 Ежа\n12+1.4 Квіткі ў кіно\n70-28 Крама\n+500+25.5 Зарплата```\nВы можаце пачаць з +, каб захаваць дадзеныя як даход\nТаксама можна выкарыстоўваць базавую арыфметыку (плюс і мінус) для разліку значэння\n2. Абярыце катэгорыю з дапамогай кнопак\n3. Гатова! Ваша транзакцыя захавана.\n\n**Прагляд транзакцый:**\nНацісніце кнопку '/transactions', каб убачыць апошнія аперацыі.\n\n**Налады:**\nНацісніце кнопку '/settings' (хутка будзе даступна)."
+    },
+    "access_denied": {
+      "en": "You are not authorized to use this bot.",
+      "ru": "Вы не имеете доступа к функционалу данного бота.",
+      "be": "Вы не маеце правоў на карыстанне гетым ботам."
+    },
+    "back": {
+      "en": "Back",
+      "ru": "Назад",
+      "be": "Вярнуцца"
     }
   },
   "settings": {

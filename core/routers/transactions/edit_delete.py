@@ -81,9 +81,9 @@ async def show_transactions(
         qty=real_transactions_qty,
     )
     text = translated_header + "\n\n"
-    text += _make_transactions_text(transactions)
+    text += _make_transactions_text(transactions, user_data.lang)
 
-    keyboard = get_edit_delete_pass_keyboard()
+    keyboard = get_edit_delete_pass_keyboard(user_data.lang)
     await state.set_state(EditDeleteFSM.select_action)
     await message.answer(text, reply_markup=keyboard)
 
@@ -101,11 +101,12 @@ async def process_actions_select(
             keyboard = chose_edit_delete_transaction_keyboard(
                 TransactionFlowBranchesEnum.DELETE,
                 actions_qty=len(state_data["transactions"]),
+                translator=user_data.lang,
             )
             await callback.message.edit_reply_markup(reply_markup=keyboard)
             await state.set_state(EditDeleteFSM.delete_state)
             await callback.answer(
-                user_data.lang(texts.transactions.delete),
+                user_data.lang(texts.transactions.delete.alert),
                 show_alert=True,  # Shows as popup/alert
             )
         case TransactionFlowBranchesEnum.EDIT:
@@ -113,6 +114,7 @@ async def process_actions_select(
             keyboard = chose_edit_delete_transaction_keyboard(
                 TransactionFlowBranchesEnum.EDIT,
                 actions_qty=len(state_data["transactions"]),
+                translator=user_data.lang,
             )
             await callback.message.edit_reply_markup(reply_markup=keyboard)
             await state.set_state(EditDeleteFSM.edit_state)
@@ -147,7 +149,7 @@ async def process_delete_transaction(
         qty=transaction_qty,
     )
     new_text = translated_header + "\n\n"
-    new_text += _make_transactions_text(transactions)
+    new_text += _make_transactions_text(transactions, user_data.lang)
 
     await callback.message.edit_text(text=new_text)
 
@@ -165,7 +167,7 @@ async def process_select_for_editing(
 
     await state.update_data(transaction_to_update=transaction_to_update)
 
-    keyboard = get_edit_choose_part_keyboard()
+    keyboard = get_edit_choose_part_keyboard(user_data.lang)
     await callback.message.edit_reply_markup(reply_markup=keyboard)
     await state.set_state(EditDeleteFSM.edit_select_part)
     await callback.answer(user_data.lang(texts.transactions.edit.choose))
@@ -188,7 +190,7 @@ async def process_select_part_for_editing(
     )
 
     match callback.data:
-        case "value":
+        case "amount":
             await callback.message.edit_reply_markup(reply_markup=None)
             new_amount_text = user_data.lang(texts.transactions.edit.amount)
             await callback.message.reply(

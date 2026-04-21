@@ -58,7 +58,7 @@ async def handle_numbered_message(
     keyboard = await get_category_keyboard(session)
 
     await state.set_state(CreateTransactionFSM.after_creation_update_category)
-    text = user_data.lang(texts.transactions.base.recorded)
+    text = user_data.lang(texts.transactions.new.recorded)
     human_readable = transaction.to_human_readable(user_data.lang)
     await message.answer(f"{text} {human_readable}", reply_markup=keyboard)
 

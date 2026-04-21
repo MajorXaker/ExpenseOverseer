@@ -27,15 +27,16 @@ class Transaction(BaseModel):
 
     def to_human_readable(self, translator: Translator) -> str:
         text = (
-            translator(texts.transaction.new.expense)
+            translator(texts.transactions.new.expense)
             if self.transaction_type == TransactionType.EXPENSE
-            else translator(texts.transaction.new.income)
+            else translator(texts.transactions.new.income)
         )
         text += f' {self.amount} {self.currency} "{self.description}"'
 
         if self.category_name:
             text += (
-                f' {translator(texts.transaction.new.category)}: "{self.category_name}"'
+                f" {translator(texts.transactions.new.category)}:"
+                f' "{self.category_name}"'
             )
         return text
 
