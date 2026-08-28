@@ -15,7 +15,7 @@ from core.transactions import (
 from models.dto.parsed_message import ParsedMessage
 from models.dto.transaction import Transaction
 from models.dto.user_data import UserData
-from models.enums.currency import CurrencyEnum
+from models.enums.currency import SUPPORTED_CURRENCIES
 from models.enums.transaction_type import TransactionType
 from utils.exceptions import InvalidAmountException
 
@@ -26,7 +26,16 @@ class CreateTransactionFSM(StatesGroup):
     after_creation_update_category = State()
 
 
-@transaction_router.message(F.text.regexp(r"^([0-9.+-]+)\s+(.+)$"))
+# Matches plain amounts ("25 food", "+50 salary") as well as amounts
+# prefixed by a supported currency code to override the user's default
+# currency for that single transaction (e.g. "pln 12.5 taxi").
+_CURRENCY_CODES_PATTERN = "|".join(currency.value for currency in SUPPORTED_CURRENCIES)
+_TRANSACTION_MESSAGE_REGEXP = (
+    rf"(?i)^(?:(?:{_CURRENCY_CODES_PATTERN})\s+)?[0-9.+-]+\s+.+$"
+)
+
+
+@transaction_router.message(F.text.regexp(_TRANSACTION_MESSAGE_REGEXP))
 async def handle_numbered_message(
     message: Message,
     session: AsyncSession,
@@ -43,11 +52,12 @@ async def handle_numbered_message(
     transaction_type = (
         TransactionType.INCOME if parsed_message.is_income else TransactionType.EXPENSE
     )
+    currency = parsed_message.currency or user_data.default_currency
 
     transaction = Transaction(
         user_id=user_data.user_id,
         amount=parsed_message.amount,
-        currency=CurrencyEnum.BYN,
+        currency=currency,
         description=parsed_message.description,
         date=date.today(),
         transaction_type=transaction_type,
