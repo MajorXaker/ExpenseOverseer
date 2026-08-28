@@ -135,9 +135,9 @@
       "be": "Няправільная каманда"
     },
     "help": {
-      "en": "❓ **How to Use Expense Income Tracker**\n\n**Adding an Expense:**\n1. Enter the monetary amount (e.g., 50) and a description (e.g., 'Lunch at restaurant')\nIt should look like this:\n```50.45 Food\n12+1.4 Cinema Tickets\n70-28 Shop\n+500+25.5 Salary```\nYou could start with + to store data as income\nAlso you could use basic arithmetics (plus and minus) to calculate value\n2. Select a category from the buttons\n3. Done! Your transaction is saved.\n\n**View Transactions:**\nPress the '/transactions' button to see your recent expenses.\n\n**Settings:**\nPress the '/settings' button (coming soon).",
-      "ru": "❓ **Как пользоваться трекером доходов и расходов**\n\n**Добавление расхода:**\n1. Введите сумму (например, 50) и описание (например, 'Обед в ресторане')\nЭто должно выглядеть так:\n```50.45 Еда\n12+1.4 Билеты в кино\n70-28 Магазин\n+500+25.5 Зарплата```\nВы можете начать с +, чтобы сохранить данные как доход\nТакже можно использовать базовую арифметику (плюс и минус) для расчёта значения\n2. Выберите категорию с помощью кнопок\n3. Готово! Ваша транзакция сохранена.\n\n**Просмотр транзакций:**\nНажмите кнопку '/transactions', чтобы увидеть последние операции.\n\n**Настройки:**\nНажмите кнопку '/settings' (скоро будет доступно).",
-      "be": "❓ **Як карыстацца трэкером даходаў і выдаткаў**\n\n**Даданне выдатку:**\n1. Увядзіце суму (напрыклад, 50) і апісанне (напрыклад, 'Абед у рэстаране')\nГэта павінна выглядаць так:\n```50.45 Ежа\n12+1.4 Квіткі ў кіно\n70-28 Крама\n+500+25.5 Зарплата```\nВы можаце пачаць з +, каб захаваць дадзеныя як даход\nТаксама можна выкарыстоўваць базавую арыфметыку (плюс і мінус) для разліку значэння\n2. Абярыце катэгорыю з дапамогай кнопак\n3. Гатова! Ваша транзакцыя захавана.\n\n**Прагляд транзакцый:**\nНацісніце кнопку '/transactions', каб убачыць апошнія аперацыі.\n\n**Налады:**\nНацісніце кнопку '/settings' (хутка будзе даступна)."
+      "en": "❓ **How to Use Expense Income Tracker**\n\n**Adding an Expense:**\n1. Enter the monetary amount (e.g., 50) and a description (e.g., 'Lunch at restaurant')\nIt should look like this:\n```50.45 Food\n12+1.4 Cinema Tickets\n70-28 Shop\n+500+25.5 Salary```\nYou could start with + to store data as income\nAlso you could use basic arithmetics (plus and minus) to calculate value\nTo record a transaction in a different currency, prefix it with the currency code:\n```pln 12.5 Taxi\neur 50 Hotel```\n2. Select a category from the buttons\n3. Done! Your transaction is saved.\n\n**View Transactions:**\nPress the '/transactions' button to see your recent expenses.\n\n**Settings:**\nPress the '/settings' button to choose your default currency (BYN, USD, EUR or PLN).",
+      "ru": "❓ **Как пользоваться трекером доходов и расходов**\n\n**Добавление расхода:**\n1. Введите сумму (например, 50) и описание (например, 'Обед в ресторане')\nЭто должно выглядеть так:\n```50.45 Еда\n12+1.4 Билеты в кино\n70-28 Магазин\n+500+25.5 Зарплата```\nВы можете начать с +, чтобы сохранить данные как доход\nТакже можно использовать базовую арифметику (плюс и минус) для расчёта значения\nЧтобы записать транзакцию в другой валюте, укажите код валюты перед суммой:\n```pln 12.5 Такси\neur 50 Отель```\n2. Выберите категорию с помощью кнопок\n3. Готово! Ваша транзакция сохранена.\n\n**Просмотр транзакций:**\nНажмите кнопку '/transactions', чтобы увидеть последние операции.\n\n**Настройки:**\nНажмите кнопку '/settings', чтобы выбрать валюту по умолчанию (BYN, USD, EUR или PLN).",
+      "be": "❓ **Як карыстацца трэкером даходаў і выдаткаў**\n\n**Даданне выдатку:**\n1. Увядзіце суму (напрыклад, 50) і апісанне (напрыклад, 'Абед у рэстаране')\nГэта павінна выглядаць так:\n```50.45 Ежа\n12+1.4 Квіткі ў кіно\n70-28 Крама\n+500+25.5 Зарплата```\nВы можаце пачаць з +, каб захаваць дадзеныя як даход\nТаксама можна выкарыстоўваць базавую арыфметыку (плюс і мінус) для разліку значэння\nКаб запісаць транзакцыю ў іншай валюце, укажыце код валюты перад сумай:\n```pln 12.5 Такс\neur 50 Гатэль```\n2. Абярыце катэгорыю з дапамогай кнопак\n3. Гатова! Ваша транзакцыя захавана.\n\n**Прагляд транзакцый:**\nНацісніце кнопку '/transactions', каб убачыць апошнія аперацыі.\n\n**Налады:**\nНацісніце кнопку '/settings', каб абраць валюту па змаўчанні (BYN, USD, EUR або PLN)."
     },
     "access_denied": {
       "en": "You are not authorized to use this bot.",
@@ -151,10 +151,17 @@
     }
   },
   "settings": {
-    "placeholder": {
-      "en": "⚙️ Settings\n\n🚧 This sections is in development. It would be available later",
-      "ru": "⚙️ Настройки\n\n🚧 В разработке, будет добавлено позднее",
-      "be": "⚙️ Налады\n\n🚧 Будзе дабаўлена паздней, яшчэ разрабляецца."
+    "current_currency": {
+      "en": "⚙️ Settings\n\nYour default currency: {currency}\nChoose a new one below:",
+      "ru": "⚙️ Настройки\n\nВаша валюта по умолчанию: {currency}\nВыберите новую ниже:",
+      "be": "⚙️ Налады\n\nВаша валюта па змаўчанні: {currency}\nАбярыце новую ніжэй:",
+      "__replaceable": true
+    },
+    "currency_updated": {
+      "en": "✅ Default currency updated to {currency}",
+      "ru": "✅ Валюта по умолчанию изменена на {currency}",
+      "be": "✅ Валюта па змаўчанні зменена на {currency}",
+      "__replaceable": true
     }
   },
   "commands": {

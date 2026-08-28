@@ -6,7 +6,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from models import db_models as m
 from models.dto.transaction import Transaction
-from models.enums.currency import CurrencyEnum
 from models.enums.transaction_type import TransactionType
 
 
@@ -19,8 +18,7 @@ def _create_insert_query(transaction: Transaction) -> sa.Insert:
             {
                 model.user_id: transaction.user_id,
                 model.amount: transaction.amount,
-                model.currency: CurrencyEnum.BYN,
-                # hardcoded currency for version 0.0.1
+                model.currency: transaction.currency,
                 model.description: transaction.description,
                 model.transaction_date: transaction.date,
             }
