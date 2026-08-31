@@ -14,7 +14,7 @@ from core.keyboards.analytics import get_analytics_initial_keyboard
 from core.language import texts
 from models.dto.user_data import UserData
 from utils.config import log
-from utils.fsm_utils import back_handler_wrapper
+from utils.fsm_utils import FSMUtils
 
 analytics_router = Router()
 
@@ -37,7 +37,6 @@ async def help_command(
     await message.answer(text, reply_markup=keyboard)
 
 
-@back_handler_wrapper
 @analytics_router.callback_query(AnalyticsFSM.analytics_initial)
 async def process_actions_select(
     callback: CallbackQuery,
@@ -45,6 +44,11 @@ async def process_actions_select(
     session: AsyncSession,
     user_data: UserData,
 ):
+    # back handler wrapper seem to have failed us
+    if FSMUtils.is_back(callback):
+        await FSMUtils.process_back(callback, state)
+        return
+
     state_data = await state.get_data()
     await callback.message.edit_reply_markup(reply_markup=None)
     match callback.data:

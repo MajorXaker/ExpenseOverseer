@@ -21,4 +21,6 @@ SUPPORTED_CURRENCIES: tuple[CurrencyEnum, ...] = (
     CurrencyEnum.USD,
     CurrencyEnum.EUR,
     CurrencyEnum.PLN,
+    CurrencyEnum.CNY,
+    CurrencyEnum.RUB,
 )

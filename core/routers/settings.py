@@ -40,6 +40,5 @@ async def process_currency_selection(
     )
 
     text = user_data.lang(texts.settings.currency_updated, currency=currency)
-    keyboard = get_currency_keyboard(currency)
-    await callback.message.edit_text(text, reply_markup=keyboard)
+    await callback.message.edit_text(text, reply_markup=None)
     await callback.answer()

@@ -25,7 +25,7 @@ from models.dto.transaction import Transaction
 from models.dto.user_data import UserData
 from models.enums.flow_type import TransactionFlowBranchesEnum
 from utils.config import log, settings
-from utils.fsm_utils import back_handler_wrapper
+from utils.fsm_utils import FSMUtils
 
 edit_delete_transaction_router = Router()
 
@@ -52,7 +52,6 @@ def _make_transactions_text(
     return text
 
 
-@back_handler_wrapper
 @edit_delete_transaction_router.message(F.text == "/modify")
 async def show_transactions(
     message: Message,
@@ -88,13 +87,17 @@ async def show_transactions(
     await message.answer(text, reply_markup=keyboard)
 
 
-@back_handler_wrapper
 @edit_delete_transaction_router.callback_query(EditDeleteFSM.select_action)
 async def process_actions_select(
     callback: CallbackQuery,
     state: FSMContext,
     user_data: UserData,
 ):
+    # back handler wrapper seem to have failed us
+    if FSMUtils.is_back(callback):
+        await FSMUtils.process_back(callback, state)
+        return
+
     state_data = await state.get_data()
     match callback.data:
         case TransactionFlowBranchesEnum.DELETE:
@@ -123,7 +126,6 @@ async def process_actions_select(
             await callback.message.edit_reply_markup(reply_markup=None)
 
 
-@back_handler_wrapper
 @edit_delete_transaction_router.callback_query(EditDeleteFSM.delete_state)
 async def process_delete_transaction(
     callback: CallbackQuery,
@@ -131,6 +133,11 @@ async def process_delete_transaction(
     session: AsyncSession,
     user_data: UserData,
 ):
+    # back handler wrapper seem to have failed us
+    if FSMUtils.is_back(callback):
+        await FSMUtils.process_back(callback, state)
+        return
+
     number_to_delete = int(callback.data.lstrip("delete_"))
     state_data = await state.get_data()
     selected_transaction: Transaction = state_data["transactions"][number_to_delete]
@@ -154,13 +161,17 @@ async def process_delete_transaction(
     await callback.message.edit_text(text=new_text)
 
 
-@back_handler_wrapper
 @edit_delete_transaction_router.callback_query(EditDeleteFSM.edit_state)
 async def process_select_for_editing(
     callback: CallbackQuery,
     state: FSMContext,
     user_data: UserData,
 ):
+    # back handler wrapper seem to have failed us
+    if FSMUtils.is_back(callback):
+        await FSMUtils.process_back(callback, state)
+        return
+
     updated_transaction_num = int(callback.data.lstrip("edit_"))
     state_data = await state.get_data()
     transaction_to_update = state_data["transactions"][updated_transaction_num]
@@ -173,7 +184,6 @@ async def process_select_for_editing(
     await callback.answer(user_data.lang(texts.transactions.edit.choose))
 
 
-@back_handler_wrapper
 @edit_delete_transaction_router.callback_query(EditDeleteFSM.edit_select_part)
 async def process_select_part_for_editing(
     callback: CallbackQuery,
@@ -181,6 +191,11 @@ async def process_select_part_for_editing(
     session: AsyncSession,
     user_data: UserData,
 ):
+    # back handler wrapper seem to have failed us
+    if FSMUtils.is_back(callback):
+        await FSMUtils.process_back(callback, state)
+        return
+
     state_data = await state.get_data()
     transaction = state_data["transaction_to_update"]
 
